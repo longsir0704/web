@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+
+<style>
+    #app{
+        width: 1200px;
+        height: 400px;
+        margin: 0 auto;
+    }
+    #leftFloat{
+        width: 750px;
+        height: 400px;
+        float: left;
+    }
+    #rightFloat{
+        width: 450px;
+        height: 400px;
+        float: right;
+        padding-left: 100px;
+    }
+    .mytext{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+
+</style>
+<body>
+    <div id="app">
+        <div id="leftFloat">
+            <ul class="nav nav-tabs">
+                <li role="presentation" ><a href="#">人事信息</a></li>
+                <li role="presentation"><a href="#">教务系统</a></li>
+                <li role="presentation" class="active"><a href="#">学工信息</a></li>
+            </ul>
+            <div class="row" style="margin-top: 15px" v-for="(newsInfo, index) in newsInfos" v-if="index % 2 == 0">
+                <div class="col-md-4 mytext">{{newsInfo.title}}</div>
+                <div class="col-md-2">{{newsInfo.date}}</div>
+                <div class="col-md-4 mytext">{{newsInfos[index + 1].title}}</div>
+                <div class="col-md-2">{{newsInfos[index + 1].date}}</div>
+            </div>
+        </div>
+        <div id="rightFloat">
+            <h3>专题网站</h3>
+            <hr>
+            <div class="row" style="margin-top: 20px" v-for="(relation, index) in relation1" v-if="index % 2 == 0">
+                <div class="col-md-1"><span :class="relation.icon" aria-hidden="true"></span></div>
+                <div class="col-md-5">{{relation.name}}</div>
+                <div class="col-md-1"><span :class="relation1[index + 1].icon" aria-hidden="true"></span></div>
+                <div class="col-md-5">{{relation1[index + 1].name}}</div>
+            </div>
+
+            <h3>资源中心</h3>
+            <hr>
+            <div class="row" style="margin-top: 20px" v-for="(relation, index) in relation2" v-if="index % 2 == 0">
+                <div class="col-md-6" >{{relation.name}}</div>
+                <div class="col-md-6" v-if="index + 1 < relation2.length">{{relation2[index + 1].name}}</div>
+            </div>
+       </div>
+
+    </div>
+</body>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            newsInfos:[],
+            relation1:[],
+            relation2:[]
+        },
+        methods:{
+            // 页面加载时查询数据进行初始化
+            selectNewsInfos: function(){
+                $.ajax({
+                    url:"/selectNewsInfoByType",
+                    type:"GET",
+                    data:{type : 3},
+                    success:function(result){
+                        vue.newsInfos = result;
+                    }
+                });
+            },
+            selectRelation1:function () {
+                $.ajax({
+                    url:"/selectRelationByType",
+                    type:"GET",
+                    data:{type : 1},
+                    success:function(result){
+                        vue.relation1 = result;
+                    }
+                });
+            },
+            selectRelation2:function () {
+                $.ajax({
+                    url:"/selectRelationByType",
+                    type:"GET",
+                    data:{type: 2},
+                    success:function(result){
+                        vue.relation2 = result;
+                    }
+                });
+            }
+        },
+        create:function () {
+            
+        },
+        mounted:function () {
+            // 利用vue钩子函数 在页面初始化的时候发送请求获取数据
+            this.selectNewsInfos();
+            this.selectRelation1();
+            this.selectRelation2();
+        }
+    })
+
+</script>
+</html>

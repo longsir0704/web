@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web.dao.RelationDao">
+    <resultMap id="BaseResultMap" type="web.vo.Relation">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+    </resultMap>
+
+    <!--根据类型查询新闻-->
+    <select id="selectRelationByType" resultMap="BaseResultMap">
+        select * from `relation` where `type` = #{type}
+    </select>
+
+
+
+
+
+</mapper>
